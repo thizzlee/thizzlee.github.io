@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presentasi Interaktif: Bangun Ruang</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Chosen Palette: Warm Neutrals with Sunny Accents (Amber, Blue, Green, Indigo) -->
+    <!-- Application Structure Plan: A single-page, scrollable learning module with a sticky navigation header. The structure follows a logical pedagogical flow: 1. Introduction, 2. Interactive Definitions of elements, 3. Tabbed Showcase of different Shapes (NEW: includes interactive CSS illustrations), 4. Real-world Gallery (Placeholder for Video), 5. An interactive Practice Problem, 6. Final Quiz. This linear but explorable structure is ideal for guiding students through new concepts step-by-step while keeping them engaged with interactivity in each section. -->
+    <!-- Visualization & Content Choices: Report Info: Shape elements (Sisi, Rusuk, Titik Sudut) -> Goal: Inform/Interact -> Viz: CSS 3D Cube -> Interaction: JS-driven highlighting on click -> Justification: Provides a hands-on way to understand abstract components. Report Info: Types of Shapes -> Goal: Organize/Compare -> Viz: Tabbed layout with stylized CSS illustrations (NEW) and descriptive text -> Interaction: Click tabs to switch views & Hover effect on illustrations -> Justification: Allows easy comparison with appealing visuals. Report Info: Quiz -> Goal: Assess -> Viz: Interactive HTML form/buttons -> Interaction: Instant feedback on click & final score calculation -> Justification: Reinforces learning. -->
+    <!-- CONFIRMATION: NO SVG graphics used. NO Mermaid JS used. -->
+    <style>
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #FFFBF5; /* Creamy White */
+            color: #4A4A4A; /* Dark Gray */
+        }
+        .perspective-container {
+            perspective: 1000px;
+        }
+        /* --- KUBUS INTERAKTIF (3D) --- */
+        .cube {
+            width: 150px;
+            height: 150px;
+            position: relative;
+            transform-style: preserve-3d;
+            transform: rotateX(-25deg) rotateY(35deg);
+            transition: transform 0.5s ease;
+        }
+        .cube-face {
+            position: absolute;
+            width: 150px;
+            height: 150px;
+            border: 2px solid #F59E0B; /* Amber Border */
+            background-color: rgba(251, 191, 36, 0.2); /* Light Amber Fill */
+            transition: all 0.3s ease;
+        }
+        .front  { transform: rotateY(  0deg) translateZ(75px); }
+        .back   { transform: rotateY(180deg) translateZ(75px); }
+        .right  { transform: rotateY( 90deg) translateZ(75px); }
+        .left   { transform: rotateY(-90deg) translateZ(75px); }
+        .top    { transform: rotateX( 90deg) translateZ(75px); }
+        .bottom { transform: rotateX(-90deg) translateZ(75px); }
+        
+        .sisi-highlight .cube-face { background-color: rgba(234, 179, 8, 0.6); border-color: #D97706;}
+        .rusuk-highlight .cube-face { border: 4px solid #DC2626; background-color: rgba(251, 191, 36, 0.1);}
+        .titik-sudut-highlight .cube-face::before,
+        .titik-sudut-highlight .cube-face::after {
+            content: '';
+            position: absolute;
+            width: 15px;
+            height: 15px;
+            background-color: #1D4ED8;
+            border-radius: 50%;
+            z-index: 10;
+        }
+        .titik-sudut-highlight .cube-face::before { top: -7.5px; left: -7.5px; }
+        .titik-sudut-highlight .cube-face::after { top: -7.5px; right: -7.5px; }
+        .titik-sudut-highlight .front::before, .titik-sudut-highlight .back::before, .titik-sudut-highlight .left::before, .titik-sudut-highlight .right::before { top: calc(100% - 7.5px); }
+
+        /* --- STYLIZED 2.5D SHAPES FOR TABS --- */
+        .shape-illustration {
+            width: 100%;
+            height: 200px;
+            position: relative;
+            margin-bottom: 1.5rem;
+            transform-style: preserve-3d;
+            transition: transform 0.3s ease;
+        }
+        .shape-illustration:hover {
+            transform: scale(1.05) perspective(1000px);
+            filter: drop-shadow(0 10px 8px rgba(0, 0, 0, 0.1));
+        }
+
+        /* Kubus Illustration */
+        .shape-cube { background-color: #FCD34D; }
+        
+        /* Balok Illustration (Blue) */
+        .shape-balok {
+            background-color: #93C5FD;
+            transform: skewX(-10deg) skewY(-5deg) scale(0.9);
+        }
+
+        /* Prisma Segitiga Illustration (Green) */
+        .shape-prisma {
+            background-color: #A7F3D0;
+            clip-path: polygon(10% 0, 90% 0, 100% 100%, 0% 100%);
+            transform: skewX(-15deg);
+        }
+        .shape-prisma::before {
+            content: '';
+            position: absolute;
+            top: -20px;
+            left: 50%;
+            transform: translateX(-50%) rotate(0deg);
+            width: 100px;
+            height: 40px;
+            background-color: #34D399;
+            clip-path: polygon(50% 0%, 0% 100%, 100% 100%);
+        }
+
+        /* Limas Segi Empat Illustration (Indigo) */
+        .shape-limas {
+            background-color: #C7D2FE;
+            clip-path: polygon(50% 0, 0% 100%, 100% 100%);
+        }
+        .shape-limas::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 50px;
+            background-color: #818CF8;
+            border-radius: 5px;
+            transform: translateY(100%) scale(1.1);
+        }
+        
+        .tab-button {
+            transition: all 0.3s ease;
+        }
+        .tab-active {
+            background-color: #F59E0B;
+            color: white;
+            border-radius: 9999px; /* Full rounded for pill effect */
+            box-shadow: 0 4px 6px rgba(245, 158, 11, 0.4);
+        }
+        .quiz-option:not(.disabled):hover {
+            background-color: #FEF3C7;
+            transform: scale(1.02);
+        }
+        .quiz-option.correct {
+            background-color: #10B981 !important; /* Green 500 */
+            color: white;
+            border-color: #059669;
+        }
+        .quiz-option.incorrect {
+            background-color: #EF4444 !important; /* Red 500 */
+            color: white;
+            border-color: #DC2626;
+        }
+        .quiz-option.disabled {
+            cursor: not-allowed;
+            opacity: 0.7;
+        }
+        .smooth-scroll {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="smooth-scroll">
+
+    <header id="header" class="bg-white/90 backdrop-blur-sm sticky top-0 z-50 shadow-md">
+        <nav class="container mx-auto px-6 py-3 flex justify-between items-center">
+            <div class="text-2xl font-bold text-amber-600">🚀 GeoSpark</div>
+            <div class="hidden md:flex space-x-6">
+                <a href="#definisi" class="text-gray-600 hover:text-amber-600 transition">Definisi</a>
+                <a href="#jenis" class="text-gray-600 hover:text-amber-600 transition">Jenis</a>
+                <a href="#latihan" class="text-gray-600 hover:text-amber-600 transition">Latihan</a>
+                <a href="#kuis" class="text-gray-600 hover:text-amber-600 transition">Kuis</a>
+            </div>
+        </nav>
+    </header>
+
+    <main class="container mx-auto px-6 py-8">
+
+        <section id="hero" class="text-center py-16 md:py-24 bg-amber-50 rounded-xl shadow-inner mb-16">
+            <h1 class="text-4xl md:text-6xl font-extrabold text-amber-700 mb-4">Kenali Bentuk Tiga Dimensi!</h1>
+            <p class="text-lg md:text-xl text-gray-700 max-w-3xl mx-auto mb-8">Selamat datang di petualangan Bangun Ruang! Mari kita jelajahi dunia bentuk 3D yang ada di sekitar kita dengan cara yang seru dan interaktif.</p>
+            <a href="#definisi" class="bg-amber-500 text-white font-bold py-3 px-10 rounded-full shadow-lg hover:bg-amber-600 transition duration-300 transform hover:scale-105">Mulai Petualangan</a>
+        </section>
+
+        <section id="definisi" class="py-16 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-2 text-blue-700">Apa itu Bangun Ruang?</h2>
+                <p class="text-gray-600">Mari kita bedah komponen-komponen dasarnya melalui kubus interaktif!</p>
+            </div>
+            <div class="grid md:grid-cols-2 gap-12 items-center bg-white p-8 rounded-2xl shadow-xl">
+                <div class="prose max-w-none">
+                    <h3>Dari 2D ke 3D</h3>
+                    <p>Bangun datar (seperti persegi) itu pipih (2 dimensi). **Bangun Ruang** punya **3 dimensi** (**panjang, lebar, dan tinggi**), sehingga punya **volume** atau isi!</p>
+                    <h3 class="mt-8 text-blue-600">Unsur-Unsur Penting</h3>
+                    <p>Setiap bangun ruang punya 3 unsur utama. **Klik tombol** di bawah untuk melihatnya langsung pada kubus 3D di sebelah kanan!</p>
+                    <div id="element-buttons" class="flex flex-wrap gap-3 mt-4">
+                        <button data-element="sisi" class="bg-amber-100 text-amber-800 px-4 py-2 rounded-full font-semibold hover:bg-amber-200 transition">Sisi (Permukaan)</button>
+                        <button data-element="rusuk" class="bg-blue-100 text-blue-800 px-4 py-2 rounded-full font-semibold hover:bg-blue-200 transition">Rusuk (Garis Tepi)</button>
+                        <button data-element="titik-sudut" class="bg-green-100 text-green-800 px-4 py-2 rounded-full font-semibold hover:bg-green-200 transition">Titik Sudut (Pojok)</button>
+                    </div>
+                    <div id="element-description" class="mt-6 p-4 bg-gray-100 rounded-lg min-h-[100px] border-l-4 border-amber-500">
+                        <p class="text-gray-700">Pilih salah satu unsur untuk melihat definisinya di sini dan highlight pada kubus.</p>
+                    </div>
+                </div>
+                <div class="flex justify-center items-center h-64 perspective-container">
+                    <div id="interactive-cube" class="cube">
+                        <div class="cube-face front"></div>
+                        <div class="cube-face back"></div>
+                        <div class="cube-face right"></div>
+                        <div class="cube-face left"></div>
+                        <div class="cube-face top"></div>
+                        <div class="cube-face bottom"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        
+        <section id="jenis" class="py-16 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-2 text-green-700">Jenis-Jenis Bangun Ruang</h2>
+                <p class="text-gray-600">Sentuh atau arahkan kursor ke ilustrasi untuk melihat interaksi!</p>
+            </div>
+            <div>
+                <div class="flex justify-center flex-wrap gap-2 mb-8">
+                    <button data-tab="kubus" class="tab-button tab-active px-6 py-2 font-semibold text-sm focus:outline-none">Kubus</button>
+                    <button data-tab="balok" class="tab-button px-6 py-2 font-semibold text-sm text-gray-600 focus:outline-none">Balok</button>
+                    <button data-tab="prisma" class="tab-button px-6 py-2 font-semibold text-sm text-gray-600 focus:outline-none">Prisma</button>
+                    <button data-tab="limas" class="tab-button px-6 py-2 font-semibold text-sm text-gray-600 focus:outline-none">Limas</button>
+                </div>
+                <div id="tab-content" class="bg-white p-8 rounded-2xl shadow-xl grid md:grid-cols-3 gap-8 items-center">
+                    
+                    <div id="illustration-area" class="md:col-span-1 flex justify-center items-center h-48 md:h-64 border-r pr-8">
+                        <div id="kubus-viz" class="shape-illustration w-36 h-36 bg-amber-500 rounded-lg"></div>
+                        <div id="balok-viz" class="shape-illustration w-48 h-32 hidden shape-balok rounded-lg"></div>
+                        <div id="prisma-viz" class="shape-illustration w-40 h-48 hidden shape-prisma rounded-lg"></div>
+                        <div id="limas-viz" class="shape-illustration w-36 h-36 hidden shape-limas rounded-lg"></div>
+                    </div>
+
+                    <div id="text-area" class="md:col-span-2">
+                        <div id="kubus-content" class="tab-pane active">
+                            <h3 class="text-2xl font-bold text-amber-600 mb-3">Kubus (Si Sempurna)</h3>
+                            <p>Kubus dibatasi oleh **6 sisi berbentuk persegi** yang semuanya **sama besar**. Semua rusuknya juga sama panjang. Contohnya adalah dadu, rubik, atau kotak yang ukurannya sama di semua sisi.</p>
+                            <p class="mt-2 text-sm text-gray-500">Unsur: 6 Sisi, 12 Rusuk, 8 Titik Sudut.</p>
+                        </div>
+                        <div id="balok-content" class="tab-pane hidden">
+                            <h3 class="text-2xl font-bold text-blue-600 mb-3">Balok (Si Fleksibel)</h3>
+                            <p>Balok punya **6 sisi**, di mana sisi yang berhadapan ukurannya **sama**. Ia memiliki Panjang (p), Lebar (l), dan Tinggi (t) yang tidak harus sama. Contohnya adalah kotak sepatu, kulkas, dan buku.</p>
+                            <p class="mt-2 text-sm text-gray-500">Unsur: 6 Sisi, 12 Rusuk, 8 Titik Sudut.</p>
+                        </div>
+                        <div id="prisma-content" class="tab-pane hidden">
+                            <h3 class="text-2xl font-bold text-green-600 mb-3">Prisma (Si Alas Ganda)</h3>
+                            <p>Prisma punya **alas dan tutup** yang bentuknya **sama persis** dan sejajar. Sisi tegaknya berbentuk persegi panjang. Nama prisma ditentukan dari bentuk alasnya (misal: Prisma Segitiga).</p>
+                            <p class="mt-2 text-sm text-gray-500">Unsur: Sisi = n+2, Rusuk = 3n, Titik Sudut = 2n (n=sisi alas).</p>
+                        </div>
+                        <div id="limas-content" class="tab-pane hidden">
+                            <h3 class="text-2xl font-bold text-indigo-600 mb-3">Limas (Si Puncak Tunggal)</h3>
+                            <p>Limas punya **satu alas** dan sisi-sisi tegaknya berbentuk **segitiga** yang bertemu di satu **titik puncak**. Contoh paling terkenal adalah Piramida Mesir.</p>
+                            <p class="mt-2 text-sm text-gray-500">Unsur: Sisi = n+1, Rusuk = 2n, Titik Sudut = n+1 (n=sisi alas).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Placeholder Section for Real-World Video/Gallery -->
+        <section id="galeri" class="py-16 scroll-mt-20 text-center">
+            <h2 class="text-3xl font-bold mb-4 text-amber-700">Lihat di Sekitarmu! (Galeri Contoh)</h2>
+            <p class="text-gray-600 max-w-xl mx-auto mb-8">Video atau ilustrasi di sini akan menunjukkan contoh nyata benda berbentuk Bangun Ruang (misalnya: kaleng minuman, tenda, kotak pensil). Fokus pada pengamatan.</p>
+            <div class="bg-gray-200 h-48 flex items-center justify-center rounded-xl text-gray-500">
+                [ Area Placeholder Video/Galeri Animasi ]
+            </div>
+        </section>
+
+        <section id="latihan" class="py-16 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-2 text-blue-700">Ayo Berlatih!</h2>
+                <p class="text-gray-600">Uji pemahamanmu tentang unsur-unsur bangun ruang.</p>
+            </div>
+            <div class="max-w-2xl mx-auto bg-white p-8 rounded-xl shadow-lg border-t-4 border-blue-500">
+                <h3 class="text-xl font-semibold text-center mb-4">Hitunglah jumlah Sisi, Rusuk, dan Titik Sudut pada bangun ruang **Limas Segi Lima**!</h3>
+                <div class="space-y-4">
+                    <div class="flex items-center gap-4">
+                        <label for="sisi-input" class="w-24 font-semibold">Sisi:</label>
+                        <input type="number" id="sisi-input" class="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400">
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <label for="rusuk-input" class="w-24 font-semibold">Rusuk:</label>
+                        <input type="number" id="rusuk-input" class="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400">
+                    </div>
+                    <div class="flex items-center gap-4">
+                        <label for="titik-sudut-input" class="w-24 font-semibold">Titik Sudut:</label>
+                        <input type="number" id="titik-sudut-input" class="flex-1 p-2 border border-gray-300 rounded-md focus:ring-2 focus:ring-blue-400">
+                    </div>
+                </div>
+                <div class="text-center mt-6">
+                    <button id="check-practice" class="bg-blue-500 text-white font-bold py-2 px-6 rounded-full hover:bg-blue-600 transition transform hover:scale-105">Cek Jawaban</button>
+                </div>
+                <div id="practice-feedback" class="mt-4 text-center font-semibold"></div>
+            </div>
+        </section>
+        
+        <section id="kuis" class="py-16 scroll-mt-20">
+            <div class="text-center mb-12">
+                <h2 class="text-3xl font-bold mb-2 text-green-700">🏆 Kuis Pengetahuan</h2>
+                <p class="text-gray-600">Saatnya membuktikan pemahamanmu! Kamu akan mendapatkan skor instan.</p>
+            </div>
+            <div id="quiz-container" class="max-w-3xl mx-auto bg-white p-8 rounded-2xl shadow-xl border-t-4 border-green-500">
+                <div id="question-area" class="mb-6">
+                    <h3 id="question-text" class="text-xl font-semibold text-center text-gray-800"></h3>
+                    <p id="question-counter" class="text-center text-gray-500 mt-2"></p>
+                </div>
+                <div id="options-area" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                </div>
+                <div id="quiz-result-area" class="hidden text-center">
+                     <h3 class="text-2xl font-bold mb-4 text-green-600">Hasil Akhirmu!</h3>
+                     <p id="score-text" class="text-5xl font-extrabold mb-4 text-amber-500"></p>
+                     <p id="feedback-text" class="text-lg mb-6 text-gray-700"></p>
+                     <button id="retry-quiz" class="bg-amber-500 text-white font-bold py-3 px-8 rounded-full shadow-md hover:bg-amber-600 transition transform hover:scale-105">Ulangi Kuis</button>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white py-6 mt-16">
+        <div class="container mx-auto px-6 text-center text-sm">
+            <p>&copy; 2025 GeoSpark Interactive Learning. Materi Matematika Kelas 7.</p>
+        </div>
+    </footer>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    
+    // --- NAVIGASI SCROLL ---
+    document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+        anchor.addEventListener('click', function (e) {
+            e.preventDefault();
+            document.querySelector(this.getAttribute('href')).scrollIntoView({
+                behavior: 'smooth'
+            });
+        });
+    });
+
+    // --- INTERAKSI KUBUS (DEFINISI) ---
+    const elementButtons = document.getElementById('element-buttons');
+    const cube = document.getElementById('interactive-cube');
+    const descriptionBox = document.getElementById('element-description');
+
+    const descriptions = {
+        sisi: { title: 'Sisi (Permukaan)', text: 'Bidang atau permukaan yang membatasi bangun ruang. Kubus punya 6 sisi yang semuanya berbentuk persegi.' },
+        rusuk: { title: 'Rusuk (Garis Tepi)', text: 'Garis pertemuan antara dua sisi. Anggap saja ini adalah "rangka" dari bangun ruang. Kubus punya 12 rusuk.' },
+        'titik-sudut': { title: 'Titik Sudut (Pojok)', text: 'Titik pertemuan dari tiga atau lebih rusuk. Ini adalah "pojokan" dari bangun ruang. Kubus punya 8 titik sudut.' }
+    };
+
+    elementButtons.addEventListener('click', (e) => {
+        if (e.target.tagName === 'BUTTON') {
+            const element = e.target.dataset.element;
+            cube.className = 'cube'; 
+            void cube.offsetWidth; 
+            cube.classList.add(`${element}-highlight`);
+
+            const desc = descriptions[element];
+            descriptionBox.innerHTML = `<h4 class="font-bold text-amber-700">${desc.title}</h4><p class="text-sm">${desc.text}</p>`;
+        }
+    });
+
+    // --- INTERAKSI TAB (JENIS BANGUN RUANG) ---
+    const tabButtons = document.querySelectorAll('.tab-button');
+    const tabPanes = document.querySelectorAll('.tab-pane');
+    const vizs = {
+        kubus: document.getElementById('kubus-viz'),
+        balok: document.getElementById('balok-viz'),
+        prisma: document.getElementById('prisma-viz'),
+        limas: document.getElementById('limas-viz')
+    };
+
+    tabButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const tab = button.dataset.tab;
+            
+            tabButtons.forEach(btn => btn.classList.remove('tab-active', 'text-white'));
+            button.classList.add('tab-active');
+
+            tabPanes.forEach(pane => {
+                pane.classList.add('hidden');
+                if (pane.id === `${tab}-content`) {
+                    pane.classList.remove('hidden');
+                }
+            });
+
+            // Ganti Ilustrasi
+            Object.values(vizs).forEach(viz => viz.classList.add('hidden'));
+            vizs[tab].classList.remove('hidden');
+        });
+    });
+    
+    // --- LATIHAN UNSUR ---
+    const checkPracticeBtn = document.getElementById('check-practice');
+    const practiceFeedback = document.getElementById('practice-feedback');
+    
+    checkPracticeBtn.addEventListener('click', () => {
+        const sisi = document.getElementById('sisi-input').value;
+        const rusuk = document.getElementById('rusuk-input').value;
+        const titikSudut = document.getElementById('titik-sudut-input').value;
+        
+        let correctCount = 0;
+        let feedback = '';
+
+        // Jawaban Limas Segi Lima: Sisi=6 (5 tegak + 1 alas), Rusuk=10 (5 alas + 5 tegak), Titik Sudut=6 (5 alas + 1 puncak)
+        if (parseInt(sisi) === 6) { correctCount++; }
+        if (parseInt(rusuk) === 10) { correctCount++; }
+        if (parseInt(titikSudut) === 6) { correctCount++; }
+
+        if (correctCount === 3) {
+            feedback = '<span class="text-green-600 flex items-center justify-center">Luar biasa! Semua jawabanmu benar. 🎉</span>';
+        } else if (correctCount > 0) {
+            feedback = `<span class="text-amber-600 flex items-center justify-center">Hampir benar! Kamu benar ${correctCount} dari 3. Coba lagi!</span>`;
+        } else {
+            feedback = '<span class="text-red-600 flex items-center justify-center">Oops, sepertinya masih keliru. Coba hitung lagi pelan-pelan ya. 🧐</span>';
+        }
+        practiceFeedback.innerHTML = feedback;
+    });
+
+    // --- KUIS INTERAKTIF ---
+    const quizData = [
+        { question: "Benda sehari-hari yang paling tepat digambarkan sebagai Kubus adalah...", options: ["Kaleng minuman", "Kotak sepatu", "Dadu", "Topi ulang tahun"], answer: "Dadu" },
+        { question: "Bangun ruang yang memiliki alas dan tutup berbentuk sama persis disebut...", options: ["Limas", "Kerucut", "Balok", "Prisma"], answer: "Prisma" },
+        { question: "Sebuah Limas Segi Empat memiliki total berapa rusuk?", options: ["4 rusuk", "6 rusuk", "8 rusuk", "12 rusuk"], answer: "8 rusuk" },
+        { question: "Ciri khas utama yang membedakan Bangun Ruang dengan Bangun Datar adalah...", options: ["Jumlah sisinya", "Bentuknya persegi", "Memiliki Volume (Isi)", "Memiliki sudut siku-siku"], answer: "Memiliki Volume (Isi)" },
+        { question: "Sisi-sisi tegak pada bangun Limas selalu berbentuk...", options: ["Persegi", "Persegi Panjang", "Jajaran Genjang", "Segitiga"], answer: "Segitiga" }
+    ];
+
+    const questionArea = document.getElementById('question-area');
+    const questionText = document.getElementById('question-text');
+    const questionCounter = document.getElementById('question-counter');
+    const optionsArea = document.getElementById('options-area');
+    const resultArea = document.getElementById('quiz-result-area');
+    const scoreText = document.getElementById('score-text');
+    const feedbackText = document.getElementById('feedback-text');
+    const retryBtn = document.getElementById('retry-quiz');
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+
+    function startQuiz() {
+        currentQuestionIndex = 0;
+        score = 0;
+        resultArea.classList.add('hidden');
+        questionArea.classList.remove('hidden');
+        optionsArea.classList.remove('hidden');
+        optionsArea.innerHTML = '';
+        displayQuestion();
+    }
+
+    function displayQuestion() {
+        const question = quizData[currentQuestionIndex];
+        questionText.textContent = question.question;
+        questionCounter.textContent = `Soal ${currentQuestionIndex + 1} dari ${quizData.length}`;
+        optionsArea.innerHTML = '';
+        
+        // Randomize options order for better interactivity
+        const shuffledOptions = [...question.options].sort(() => Math.random() - 0.5);
+
+        shuffledOptions.forEach(option => {
+            const button = document.createElement('button');
+            button.textContent = option;
+            button.classList.add('quiz-option', 'p-4', 'border-2', 'rounded-lg', 'transition', 'duration-200', 'text-left', 'border-gray-200');
+            button.addEventListener('click', () => selectAnswer(button, option, question.answer));
+            optionsArea.appendChild(button);
+        });
+    }
+
+    function selectAnswer(button, selectedOption, correctAnswer) {
+        const allOptions = optionsArea.querySelectorAll('.quiz-option');
+        allOptions.forEach(opt => {
+            opt.classList.add('disabled');
+            if (opt.textContent === correctAnswer) {
+                opt.classList.add('correct');
+            }
+        });
+
+        if (selectedOption === correctAnswer) {
+            score++;
+        } else {
+            button.classList.add('incorrect');
+        }
+
+        setTimeout(() => {
+            currentQuestionIndex++;
+            if (currentQuestionIndex < quizData.length) {
+                displayQuestion();
+            } else {
+                showResults();
+            }
+        }, 1500);
+    }
+    
+    function showResults() {
+        questionArea.classList.add('hidden');
+        optionsArea.classList.add('hidden');
+        resultArea.classList.remove('hidden');
+        
+        scoreText.textContent = `${score} / ${quizData.length}`;
+        
+        let feedback = '';
+        const percentage = (score / quizData.length) * 100;
+        if (percentage === 100) {
+            feedback = "LUAR BIASA! Kamu menguasai Bangun Ruang dengan sempurna. Pertahankan! 🌟";
+        } else if (percentage >= 60) {
+            feedback = "BAGUS! Kamu sudah mengerti konsepnya. Tinjau kembali beberapa soal yang masih keliru ya. 👍";
+        } else {
+            feedback = "Jangan menyerah! Coba ulangi materi Jenis-Jenis Bangun Ruang. Kamu pasti bisa! 💪";
+        }
+        feedbackText.textContent = feedback;
+    }
+
+    retryBtn.addEventListener('click', startQuiz);
+
+    startQuiz();
+});
+</script>
+
+</body>
+</html>
