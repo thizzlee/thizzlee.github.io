@@ -1,369 +1,108 @@
-<!DOCTYPE html>
-<html lang="id">
+<!DOCTYPE html><html lang="id">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Presentasi: Analisis Kebutuhan Media Vokasi</title>
-    <!-- Load Tailwind CSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Konfigurasi Tailwind -->
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        'primary-blue': '#1e3a8a', // Darker Blue
-                        'secondary-yellow': '#fcd34d', // Bright Yellow
-                    },
-                    fontFamily: {
-                        sans: ['Inter', 'sans-serif'],
-                    },
-                }
-            }
-        }
-    </script>
-    <style>
-        /* Gaya Kustom untuk Presentasi */
-        body {
-            background-color: #f1f5f9; /* Light Gray Background */
-            font-family: 'Inter', sans-serif;
-        }
-        .slide-container {
-            min-height: calc(100vh - 80px); /* Ketinggian minimal dikurangi tinggi footer */
-            transition: opacity 0.5s ease-in-out;
-        }
-        .slide-title {
-            color: #1e3a8a; /* Primary Blue */
-            font-weight: 800;
-        }
-        .nav-button {
-            transition: all 0.2s;
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.06);
-        }
-        .nav-button:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
-        }
-        .nav-button:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .active-dot {
-            background-color: #1e3a8a;
-            transform: scale(1.2);
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Media Vokasi Interaktif</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+  <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet" />
+  <style>
+    body {
+      background: linear-gradient(120deg, #93C5FD, #FDE68A, #FBCFE8);
+      background-size: 400% 400%;
+      animation: gradientFlow 12s ease infinite;
+    }
+    @keyframes gradientFlow {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+    .btn-happy {
+      @apply px-6 py-3 bg-yellow-300 text-blue-800 rounded-full font-bold shadow-md hover:scale-105 hover:bg-yellow-400 transition-transform;
+    }
+  </style>
 </head>
-<body class="antialiased">
-
-    <!-- Kontainer Utama Presentasi -->
-    <div id="presentation-app" class="flex flex-col items-center justify-center p-4 sm:p-8">
-
-        <!-- Header - Judul Global -->
-        <header class="w-full max-w-4xl text-center py-6">
-            <h1 class="text-3xl sm:text-4xl font-extrabold text-primary-blue leading-tight">
-                OBSERVASI & ANALISIS KEBUTUHAN MEDIA VOKASI
-            </h1>
-            <p class="text-lg text-gray-600 mt-1">Studi Kasus: SMK Yosonegoro Magetan</p>
-        </header>
-
-        <!-- Area Slide Dinamis -->
-        <div id="slide-area" class="w-full max-w-4xl bg-white rounded-xl shadow-2xl p-6 sm:p-10 slide-container">
-            <!-- Konten Slide akan di-inject di sini oleh JavaScript -->
-        </div>
-
-        <!-- Kontrol Navigasi (Footer) -->
-        <footer class="w-full max-w-4xl mt-6 p-4 flex flex-col sm:flex-row items-center justify-between">
-            
-            <!-- Indikator Slide (Dots) -->
-            <div id="slide-dots" class="flex space-x-2 mb-4 sm:mb-0">
-                <!-- Dots akan di-generate oleh JS -->
-            </div>
-
-            <!-- Tombol Navigasi -->
-            <div class="flex space-x-4">
-                <button id="prev-btn" class="nav-button bg-white text-primary-blue border border-primary-blue px-6 py-2 rounded-full font-semibold hover:bg-gray-100 transition-all">
-                    &larr; Sebelumnya
-                </button>
-                <button id="next-btn" class="nav-button bg-primary-blue text-white px-6 py-2 rounded-full font-semibold hover:bg-secondary-yellow hover:text-primary-blue transition-all">
-                    Selanjutnya &rarr;
-                </button>
-            </div>
-        </footer>
+<body class="text-gray-800 font-sans overflow-x-hidden">  <!-- HOME -->  <section id="home" class="min-h-screen flex flex-col justify-center items-center text-center p-6">
+    <h1 data-aos="fade-up" class="text-4xl sm:text-5xl font-extrabold mb-4 text-blue-900">Selamat Datang di Media Vokasi Interaktif</h1>
+    <p data-aos="fade-up" data-aos-delay="200" class="text-lg mb-8 text-gray-700">Temukan fitur seru untuk belajar dan bereksplorasi!</p>
+    <div class="flex flex-wrap justify-center gap-4">
+      <a href="#fitur1" class="btn-happy">🎠 Fitur 1</a>
+      <a href="#fitur2" class="btn-happy">🧩 Fitur 2</a>
+      <a href="#fitur3" class="btn-happy">📊 Fitur 3</a>
     </div>
+  </section>  <!-- FITUR 1: Carousel -->  <section id="fitur1" class="min-h-screen flex flex-col justify-center items-center bg-blue-50 p-6">
+    <h2 class="text-3xl font-bold text-blue-800 mb-6" data-aos="fade-right">🎠 Carousel Inspiratif</h2>
+    <div id="carousel" class="relative w-80 sm:w-[400px] h-64 overflow-hidden rounded-2xl shadow-xl" data-aos="zoom-in">
+      <div class="slides w-full h-full flex transition-transform duration-700">
+        <div class="slide w-full h-full flex items-center justify-center bg-yellow-200 text-2xl font-bold">Media Digital Meningkatkan Motivasi</div>
+        <div class="slide w-full h-full flex items-center justify-center bg-green-200 text-2xl font-bold">Praktik Vokasi = Pengalaman Nyata</div>
+        <div class="slide w-full h-full flex items-center justify-center bg-pink-200 text-2xl font-bold">Interaktivitas Membuat Belajar Seru!</div>
+      </div>
+    </div>
+    <div class="mt-6 flex gap-4">
+      <button id="prevSlide" class="btn-happy">⟵ Sebelumnya</button>
+      <button id="nextSlide" class="btn-happy">Selanjutnya ⟶</button>
+    </div>
+    <a href="#home" class="mt-10 text-blue-600 font-bold hover:underline">↩️ Kembali ke Home</a>
+  </section>  <!-- FITUR 2: Mini Kuis -->  <section id="fitur2" class="min-h-screen flex flex-col justify-center items-center bg-yellow-50 p-6">
+    <h2 class="text-3xl font-bold text-yellow-700 mb-6" data-aos="fade-down">🧩 Kuis Mini</h2>
+    <p class="text-lg mb-4">Media apa yang paling disukai siswa SMK?</p>
+    <div id="quiz" class="space-y-4">
+      <button class="btn-happy" onclick="checkAnswer('a')">Buku Cetak</button>
+      <button class="btn-happy" onclick="checkAnswer('b')">Video Interaktif</button>
+      <button class="btn-happy" onclick="checkAnswer('c')">PowerPoint</button>
+    </div>
+    <p id="quizResult" class="text-xl font-bold mt-6"></p>
+    <a href="#home" class="mt-10 text-blue-600 font-bold hover:underline">↩️ Kembali ke Home</a>
+  </section>  <!-- FITUR 3: Grafik Interaktif -->  <section id="fitur3" class="min-h-screen flex flex-col justify-center items-center bg-pink-50 p-6">
+    <h2 class="text-3xl font-bold text-pink-700 mb-6" data-aos="zoom-in">📊 Grafik Preferensi Media</h2>
+    <canvas id="mediaChart" width="400" height="300" data-aos="fade-up"></canvas>
+    <a href="#home" class="mt-10 text-blue-600 font-bold hover:underline">↩️ Kembali ke Home</a>
+  </section>  <script>
+    // === FITUR 1: Carousel ===
+    const slides = document.querySelector('.slides');
+    const totalSlides = document.querySelectorAll('.slide').length;
+    let index = 0;
+    document.getElementById('nextSlide').onclick = () => moveSlide(1);
+    document.getElementById('prevSlide').onclick = () => moveSlide(-1);
+    function moveSlide(direction) {
+      index = (index + direction + totalSlides) % totalSlides;
+      slides.style.transform = `translateX(-${index * 100}%)`;
+    }
 
-    <script>
-        // Data Presentasi dalam format JSON
-        const presentationData = [
-            {
-                title: "SLIDE 1: JUDUL & IDENTITAS",
-                content: `
-                    <div class="text-center py-10">
-                        <h2 class="text-5xl font-extrabold text-primary-blue mb-4">
-                            OBSERVASI & ANALISIS KEBUTUHAN MEDIA PEMBELAJARAN VOKASI
-                        </h2>
-                        <p class="text-2xl text-gray-700 font-medium">
-                            Studi Kasus: SMK Yosonegoro Magetan (Jurusan Teknik Audio Video)
-                        </p>
-                        <div class="mt-12 text-xl space-y-2">
-                            <p><strong>Disusun Oleh:</strong></p>
-                            <p class="font-semibold">NAZLI NAHROWI - RAHAYU MENTARI - MASDA ASTIYA PURI</p>
-                            <p class="text-sm text-gray-500">PRODI TEKNOLOGI PENDIDIKAN - UNESA (2025)</p>
-                        </div>
-                        <div class="mt-10">
-                             <img src="https://placehold.co/150x150/1e3a8a/ffffff?text=UNESA" alt="Logo UNESA Placeholder" class="mx-auto rounded-lg shadow-lg">
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "SLIDE 2: LATAR BELAKANG & URGENSI MASALAH",
-                content: `
-                    <h2 class="slide-title text-3xl mb-6">LATAR BELAKANG: KESENJANGAN MEDIA VOKASI</h2>
-                    <ul class="space-y-4 text-gray-700 text-lg list-disc pl-6">
-                        <li class="p-3 bg-blue-50 rounded-lg shadow-sm">
-                            <strong>Tuntutan Pendidikan Vokasi:</strong> SMK menuntut pendekatan <em>hands-on</em> (praktik) dan aplikasi nyata untuk <em>link and match</em> dengan DUDI.
-                        </li>
-                        <li class="p-3 bg-blue-50 rounded-lg shadow-sm">
-                            <strong>Peran Krusial Media:</strong> Media digital terbukti efektif dalam meningkatkan motivasi dan menjembatani teori-praktik kompleks.
-                        </li>
-                        <li class="p-3 bg-red-50 rounded-lg shadow-sm font-bold text-red-700">
-                            <strong>Masalah Utama (Gap):</strong> Adanya kesenjangan antara media ideal (mendukung kompetensi keahlian) dengan kondisi media aktual di sekolah.
-                        </li>
-                        <li class="p-3 bg-green-50 rounded-lg shadow-sm">
-                            <strong>Fokus Studi:</strong> Menganalisis efektivitas media, mengidentifikasi kendala, dan merumuskan kebutuhan media ideal.
-                        </li>
-                    </ul>
-                `
-            },
-            {
-                title: "SLIDE 3: METODOLOGI PENELITIAN",
-                content: `
-                    <h2 class="slide-title text-3xl mb-6">METODE: PENDEKATAN KOMBINASI (MIXED METHODS)</h2>
-                    <div class="grid md:grid-cols-2 gap-6 text-gray-700">
-                        <div class="bg-primary-blue text-white p-5 rounded-xl shadow-lg">
-                            <h3 class="text-xl font-bold mb-3 border-b border-secondary-yellow pb-2">Pendekatan & Lokasi</h3>
-                            <p class="mb-2"><strong>Model:</strong> Kombinasi Sekuensial Eksploratif (Mix Methods).</p>
-                            <p class="mb-2"><strong>Tujuan:</strong> Deskriptif-Evaluatif (Mendeskripsikan dan Mengevaluasi Gap Kebutuhan).</p>
-                            <p><strong>Lokasi:</strong> SMK Yosonegoro Magetan.</p>
-                        </div>
-                        <div class="bg-yellow-50 p-5 rounded-xl shadow-lg">
-                            <h3 class="text-xl font-bold mb-3 border-b border-secondary-yellow pb-2 text-primary-blue">Subjek & Informan Kunci</h3>
-                            <ul class="list-disc pl-5">
-                                <li><strong>Responden Kuantitatif:</strong> Siswa Kelas XII (Angket Persepsi).</li>
-                                <li><strong>Informan Kualitatif:</strong> Guru Mapel & Waka Kurikulum (Wawancara Mendalam).</li>
-                            </ul>
-                        </div>
-                        <div class="md:col-span-2 bg-white p-5 rounded-xl shadow-lg border border-gray-200">
-                            <h3 class="text-xl font-bold mb-3 text-primary-blue">Teknik Pengumpulan Data (Triangulasi)</h3>
-                            <div class="flex flex-wrap gap-4 mt-3">
-                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-medium">1. Observasi Terstruktur</span>
-                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-medium">2. Angket/Kuesioner (Siswa/Guru)</span>
-                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-medium">3. Wawancara Mendalam</span>
-                                <span class="bg-green-100 text-green-800 px-3 py-1 rounded-full font-medium">4. Dokumentasi Kurikulum</span>
-                            </div>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "SLIDE 4: TEMUAN 1 - ANALISIS MEDIA EKSISTING",
-                content: `
-                    <h2 class="slide-title text-3xl mb-6">TEMUAN 1: DOMINASI MEDIA PASIF</h2>
-                    <div class="grid md:grid-cols-2 gap-6 text-gray-700">
-                        <!-- Dominasi Media -->
-                        <div class="bg-red-50 p-5 rounded-xl border-l-4 border-red-500 shadow-md">
-                            <h3 class="text-2xl font-bold text-red-700 mb-3">Media Dominan (>74%)</h3>
-                            <ul class="list-disc pl-5 space-y-1 text-lg">
-                                <li><strong>PowerPoint (41,9%)</strong></li>
-                                <li><strong>Buku Teks Cetak (32,3%)</strong></li>
-                            </ul>
-                            <p class="mt-3 text-sm italic">Hanya 19,35% yang memilih media interaktif (simulasi/aplikasi) sebagai media yang sering digunakan.</p>
-                        </div>
-                        <!-- Keterbatasan Infrastruktur -->
-                        <div class="bg-yellow-50 p-5 rounded-xl border-l-4 border-yellow-500 shadow-md">
-                            <h3 class="text-2xl font-bold text-yellow-700 mb-3">Keterbatasan Infrastruktur</h3>
-                            <p class="text-lg">Sebanyak <strong>29,03%</strong> responden siswa menyatakan fasilitas digital (internet, komputer, proyektor) di kelas mereka <strong>"Tidak Ada" atau "Kurang Memadai"</strong>.</p>
-                            <p class="mt-3 text-sm italic">Ini menghambat implementasi inisiatif digital berbasis online/cloud.</p>
-                        </div>
-                        <!-- Implikasi -->
-                        <div class="md:col-span-2 text-center mt-4 p-4 bg-gray-100 rounded-lg">
-                            <p class="text-xl font-semibold text-primary-blue">
-                                IMPLIKASI: Dominasi media pasif menghasilkan **komunikasi satu arah**, tidak sesuai dengan tuntutan praktik vokasi.
-                            </p>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "SLIDE 5: TEMUAN 2 - ANALISIS KEBUTUHAN (THE GAP)",
-                content: `
-                    <h2 class="slide-title text-3xl mb-6">TEMUAN 2: KESENJANGAN & PREFERENSI SISWA</h2>
-                    <div class="grid md:grid-cols-2 gap-6 text-gray-700">
-                        <!-- Kesenjangan -->
-                        <div class="bg-blue-100 p-5 rounded-xl shadow-md">
-                            <h3 class="text-2xl font-bold text-primary-blue mb-3">Kesenjangan Fungsionalitas</h3>
-                            <p class="text-lg">Media aktual hanya menyajikan informasi (Pasif).</p>
-                            <p class="mt-2 text-lg font-semibold">Kondisi Ideal: Media harus memiliki <em>effect size</em> tinggi (Interaktif, Animasi) untuk memfasilitasi gaya belajar Audio Visual siswa.</p>
-                        </div>
-                        <!-- Preferensi Interaksi -->
-                        <div class="bg-green-100 p-5 rounded-xl shadow-md">
-                            <h3 class="text-2xl font-bold text-green-700 mb-3">Preferensi Interaksi (Dibutuhkan Siswa)</h3>
-                            <ul class="list-disc pl-5 space-y-1 text-lg">
-                                <li>Media yang **"Bisa diklik & direspons (interaktif)"** (<strong>64,52%</strong>)</li>
-                                <li>Media yang **"Berisi simulasi nyata"** (<strong>25,81%</strong>)</li>
-                            </ul>
-                        </div>
-                        <!-- Format Ideal -->
-                        <div class="md:col-span-2 bg-yellow-100 p-5 rounded-xl shadow-md border-t-4 border-secondary-yellow">
-                            <h3 class="text-2xl font-bold text-yellow-700 mb-3">Format Media Ideal</h3>
-                            <div class="flex flex-wrap justify-around text-center">
-                                <div class="w-1/2 sm:w-1/4 p-2">
-                                    <p class="text-4xl font-extrabold text-secondary-yellow">40%</p>
-                                    <p class="text-sm font-semibold text-gray-700">Aplikasi Android/iOS</p>
-                                </div>
-                                <div class="w-1/2 sm:w-1/4 p-2">
-                                    <p class="text-4xl font-extrabold text-secondary-yellow">30%</p>
-                                    <p class="text-sm font-semibold text-gray-700">Video Interaktif</p>
-                                </div>
-                                <div class="w-full sm:w-1/2 p-2 mt-4 sm:mt-0">
-                                    <p class="text-4xl font-extrabold text-secondary-yellow">10-20 Menit</p>
-                                    <p class="text-sm font-semibold text-gray-700">Durasi Ideal (Ringkas & Mobile-Friendly)</p>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "SLIDE 6: REKOMENDASI PENGEMBANGAN MEDIA",
-                content: `
-                    <h2 class="slide-title text-3xl mb-6">REKOMENDASI: MENUJU MOBILE LEARNING TERINTEGRASI</h2>
-                    <div class="space-y-6">
-                        <!-- Model -->
-                        <div class="p-4 bg-primary-blue text-white rounded-xl shadow-xl">
-                            <p class="text-xl font-bold">MODEL PENGEMBANGAN:</p>
-                            <p class="text-2xl font-extrabold">Mobile Learning Terintegrasi dengan Simulasi dan Umpan Balik</p>
-                        </div>
+    // === FITUR 2: Mini Kuis ===
+    function checkAnswer(option) {
+      const result = document.getElementById('quizResult');
+      if (option === 'b') {
+        result.textContent = '🎉 Benar! Siswa menyukai Video Interaktif!';
+        result.className = 'text-green-600 font-bold text-xl';
+      } else {
+        result.textContent = '❌ Coba lagi!';
+        result.className = 'text-red-600 font-bold text-xl';
+      }
+    }
 
-                        <!-- Rekomendasi Konten -->
-                        <div class="p-5 bg-green-50 rounded-xl shadow-md border-l-4 border-green-500">
-                            <h3 class="text-xl font-bold text-green-800 mb-3">Fokus Konten & Fitur (Imperatif Akademik)</h3>
-                            <ul class="list-disc pl-6 space-y-2 text-gray-700">
-                                <li><strong>Pengembangan Mobile Learning:</strong> Aplikasi/e-module berbasis BYOD (Bring Your Own Device) untuk <em>self-directed learning</em>.</li>
-                                <li><strong>Peningkatan Interaktivitas:</strong> Fitur <em>quiz</em> responsif dan umpan balik langsung.</li>
-                                <li><strong>Basis Konten Nyata:</strong> Gunakan kasus/prosedur yang <em>"Sangat nyata dan relevan"</em> untuk menjembatani teori dan DUDI.</li>
-                            </ul>
-                        </div>
-
-                        <!-- Rekomendasi Praktis -->
-                        <div class="p-5 bg-yellow-50 rounded-xl shadow-md border-l-4 border-secondary-yellow">
-                            <h3 class="text-xl font-bold text-yellow-700 mb-3">Saran Praktis untuk Sekolah</h3>
-                            <ul class="list-decimal pl-6 space-y-2 text-gray-700">
-                                <li>Prioritaskan pengadaan **software lisensi simulasi teknis** (untuk jurusan TAV).</li>
-                                <li>Bangun **jaringan Wi-Fi yang stabil** di lab/bengkel praktik.</li>
-                                <li>Susun program pelatihan guru yang berorientasi pada **keterampilan produksi media digital**.</li>
-                            </ul>
-                        </div>
-                    </div>
-                `
-            },
-            {
-                title: "SLIDE 7: PENUTUP",
-                content: `
-                    <div class="text-center py-10">
-                        <h2 class="text-4xl font-extrabold text-primary-blue mb-6">KESIMPULAN & ARAH PENELITIAN LANJUTAN</h2>
-                        
-                        <div class="max-w-xl mx-auto p-6 bg-blue-50 rounded-xl shadow-lg border-2 border-primary-blue">
-                            <p class="text-lg mb-4 text-gray-800">
-                                Secara umum, terdapat <strong>kesenjangan fungsional</strong> media di SMK Yosonegoro. Media konvensional tidak lagi optimal.
-                            </p>
-                            <p class="text-xl font-semibold text-primary-blue">
-                                Pilihan media ideal adalah **Mobile Learning Interaktif** untuk mendukung pembelajaran mandiri dan adaptasi teknologi industri.
-                            </p>
-                        </div>
-
-                        <div class="mt-8">
-                            <h3 class="text-2xl font-bold text-gray-700 mb-4">Saran Penelitian Lanjutan (R&D)</h3>
-                            <ul class="list-none space-y-2 text-lg text-gray-600">
-                                <li class="font-medium bg-gray-100 p-2 rounded-lg">1. Perancangan dan Validasi Prototipe E-Module / Simulasi 3D.</li>
-                                <li class="font-medium bg-gray-100 p-2 rounded-lg">2. Uji Efektivitas Media terhadap Peningkatan Hasil Belajar Vokasi.</li>
-                            </ul>
-                        </div>
-                        
-                        <div class="mt-12 text-2xl font-extrabold text-green-700">
-                            TERIMA KASIH
-                        </div>
-                        <p class="text-lg text-gray-500">Pertanyaan & Diskusi Dipersilakan</p>
-                    </div>
-                `
-            }
-        ];
-
-        let currentSlide = 0;
-        const totalSlides = presentationData.length;
-        const slideArea = document.getElementById('slide-area');
-        const prevBtn = document.getElementById('prev-btn');
-        const nextBtn = document.getElementById('next-btn');
-        const slideDots = document.getElementById('slide-dots');
-
-        // Fungsi untuk merender slide
-        function renderSlide() {
-            // Update konten slide
-            const slide = presentationData[currentSlide];
-            slideArea.innerHTML = `
-                <div id="slide-content" class="h-full">
-                    <h1 class="text-xl font-light text-gray-400 mb-4">${slide.title}</h1>
-                    ${slide.content}
-                </div>
-            `;
-
-            // Update status tombol
-            prevBtn.disabled = currentSlide === 0;
-            nextBtn.disabled = currentSlide === totalSlides - 1;
-            nextBtn.textContent = currentSlide === totalSlides - 1 ? 'Selesai' : 'Selanjutnya →';
-
-            // Update indikator dots
-            updateDots();
+    // === FITUR 3: Chart.js ===
+    const ctx = document.getElementById('mediaChart');
+    new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: ['Video Interaktif', 'Aplikasi Mobile', 'Buku Cetak', 'PowerPoint'],
+        datasets: [{
+          label: 'Preferensi Siswa (%)',
+          data: [65, 40, 20, 15],
+          backgroundColor: ['#60A5FA', '#FDE68A', '#A7F3D0', '#FBCFE8'],
+        }]
+      },
+      options: {
+        scales: {
+          y: { beginAtZero: true }
         }
+      }
+    });
 
-        // Fungsi untuk meng-update indikator dots
-        function updateDots() {
-            slideDots.innerHTML = ''; // Kosongkan dots yang ada
-            for (let i = 0; i < totalSlides; i++) {
-                const dot = document.createElement('span');
-                dot.className = `w-3 h-3 rounded-full mx-1 cursor-pointer transition-all ${i === currentSlide ? 'active-dot bg-primary-blue scale-110' : 'bg-gray-300 hover:bg-gray-400'}`;
-                dot.dataset.index = i;
-                dot.onclick = () => {
-                    currentSlide = i;
-                    renderSlide();
-                };
-                slideDots.appendChild(dot);
-            }
-        }
-
-        // Event Listeners untuk Navigasi
-        prevBtn.addEventListener('click', () => {
-            if (currentSlide > 0) {
-                currentSlide--;
-                renderSlide();
-            }
-        });
-
-        nextBtn.addEventListener('click', () => {
-            if (currentSlide < totalSlides - 1) {
-                currentSlide++;
-                renderSlide();
-            } else {
-                // Opsional: Aksi ketika selesai, misal scroll ke atas atau tampilkan pesan
-                alert("Presentasi Selesai! Terima kasih telah menyimak.");
-                window.scrollTo({ top: 0, behavior: 'smooth' });
-            }
-        });
-
-        // Inisialisasi slide pertama
-        document.addEventListener('DOMContentLoaded', renderSlide);
-    </script>
-
-</body>
+    // === Animasi AOS ===
+    AOS.init({ duration: 800, once: true });
+  </script></body>
 </html>
