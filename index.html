@@ -19,6 +19,7 @@
     --danger:#EF476F;
     --card:#FFFDF7;
     --ink:#2B2740;
+    --gold:#FFC94A;
     --shadow: 0 10px 30px rgba(43,39,64,0.25);
   }
   *{box-sizing:border-box;}
@@ -35,6 +36,8 @@
     width:100%; height:100%;
     background:var(--sky);
   }
+
+  /* ---------------- HUD ---------------- */
   .hud{
     position:fixed; top:0; left:0; right:0;
     display:flex; justify-content:space-between; align-items:flex-start;
@@ -44,16 +47,30 @@
   }
   .hud-card{
     background:rgba(255,253,247,0.92);
-    border-radius:16px;
+    border-radius:18px;
     padding:8px 14px;
     box-shadow: var(--shadow);
-    display:flex; align-items:center; gap:8px;
+    display:flex; align-items:center; gap:10px;
     font-family:'Baloo 2', sans-serif;
     color:var(--ink);
   }
-  .hearts{ font-size:22px; letter-spacing:2px; }
-  .score-label{ font-size:13px; opacity:0.6; font-weight:700; }
-  .score-value{ font-size:22px; font-weight:800; color:var(--ink); }
+  .hud-avatar-wrap{
+    width:40px; height:48px;
+    display:flex; align-items:flex-end; justify-content:center;
+    border-radius:12px;
+    background: linear-gradient(180deg, rgba(126,200,227,0.25), rgba(126,200,227,0.05));
+  }
+  #hudAvatar{ display:block; }
+  .hearts{ font-size:20px; letter-spacing:2px; }
+  .score-label{ font-size:12px; opacity:0.55; font-weight:700; }
+  .score-value{ font-size:22px; font-weight:800; color:var(--ink); transition: transform 0.15s ease; }
+  .score-value.bump{ transform: scale(1.25); color: var(--success); }
+
+  .level-wrap{
+    position:fixed; top:14px; left:50%; transform:translateX(-50%);
+    z-index:5;
+    display:flex; flex-direction:column; align-items:center; gap:5px;
+  }
   .level-badge{
     font-family:'Baloo 2', sans-serif;
     font-weight:700;
@@ -61,33 +78,69 @@
     background: var(--sun);
     color:var(--ink);
     border-radius:999px;
-    padding:6px 14px;
+    padding:6px 16px;
     box-shadow: var(--shadow);
-    position:fixed; top:14px; left:50%; transform:translateX(-50%);
-    z-index:5;
+    white-space:nowrap;
+  }
+  .progress-track{
+    width:140px; height:8px;
+    background: rgba(255,253,247,0.6);
+    border-radius:999px;
+    overflow:hidden;
+    box-shadow: inset 0 1px 3px rgba(43,39,64,0.25);
+  }
+  .progress-fill{
+    height:100%;
+    width:0%;
+    background: linear-gradient(90deg, var(--success), #29e0b0);
+    border-radius:999px;
+    transition: width 0.25s ease;
   }
 
+  .combo-badge{
+    position:fixed; top:78px; left:50%; transform:translateX(-50%);
+    z-index:5;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:800;
+    font-size:16px;
+    color:white;
+    background: linear-gradient(180deg,#FF9A5A,#FF6B35);
+    padding:6px 16px;
+    border-radius:999px;
+    box-shadow: var(--shadow);
+    animation: comboPulse 0.35s ease;
+  }
+  @keyframes comboPulse{
+    0%{ transform: translateX(-50%) scale(0.7); opacity:0; }
+    60%{ transform: translateX(-50%) scale(1.15); }
+    100%{ transform: translateX(-50%) scale(1); opacity:1; }
+  }
+
+  .hidden{ display:none !important; }
+
+  /* ---------------- Overlays / Panels ---------------- */
   .overlay{
     position:fixed; inset:0;
     display:flex; align-items:center; justify-content:center;
     z-index:10;
     background: rgba(43,39,64,0.35);
+    padding: 16px;
   }
-  .hidden{ display:none !important; }
-
   .panel{
     background:var(--card);
     border-radius:28px;
-    padding:32px 28px;
-    max-width:420px;
-    width:88%;
+    padding:28px 26px;
+    max-width:440px;
+    width:92%;
+    max-height:92vh;
+    overflow-y:auto;
     text-align:center;
     box-shadow: var(--shadow);
     border: 4px solid rgba(43,39,64,0.06);
   }
   .panel h1{
     font-family:'Baloo 2', sans-serif;
-    font-size:30px;
+    font-size:28px;
     color:var(--building);
     margin:0 0 6px;
   }
@@ -98,26 +151,28 @@
     margin:0 0 10px;
   }
   .panel p{
-    font-size:15px;
+    font-size:14.5px;
     color:var(--ink);
     opacity:0.85;
     line-height:1.5;
-    margin: 0 0 18px;
+    margin: 0 0 14px;
   }
-  .emoji-row{ font-size:44px; margin-bottom:10px; }
+  .emoji-row{ font-size:40px; margin-bottom:8px; }
 
   .btn{
     font-family:'Baloo 2', sans-serif;
     font-weight:700;
-    font-size:18px;
+    font-size:17px;
     color:white;
     background: linear-gradient(180deg, #FF8FA3, var(--danger));
     border:none;
     border-radius:16px;
-    padding:14px 30px;
+    padding:13px 26px;
     cursor:pointer;
     box-shadow: 0 6px 0 #C22E52;
     transition: transform 0.05s ease;
+    width:100%;
+    margin-top:6px;
   }
   .btn:active{ transform: translateY(4px); box-shadow: 0 2px 0 #C22E52; }
   .btn.secondary{
@@ -125,27 +180,60 @@
     box-shadow: 0 6px 0 #049873;
   }
   .btn.secondary:active{ box-shadow: 0 2px 0 #049873; }
+  .btn.gold{
+    background: linear-gradient(180deg, #FFE08A, var(--gold));
+    color: var(--ink);
+    box-shadow: 0 6px 0 #D9A11B;
+  }
+  .btn.gold:active{ box-shadow: 0 2px 0 #D9A11B; }
+  .btn-row{ display:flex; gap:10px; }
 
   .stat-row{
-    display:flex; justify-content:center; gap:22px; margin-bottom: 18px;
+    display:flex; justify-content:center; gap:18px; margin-bottom: 16px;
   }
-  .stat{
-    font-family:'Baloo 2', sans-serif;
-  }
-  .stat .num{ font-size:26px; font-weight:800; color:var(--building);}
-  .stat .lab{ font-size:12px; opacity:0.6; font-weight:700; }
+  .stat{ font-family:'Baloo 2', sans-serif; }
+  .stat .num{ font-size:24px; font-weight:800; color:var(--building);}
+  .stat .lab{ font-size:11px; opacity:0.6; font-weight:700; }
 
-  /* Question modal */
+  /* ---------------- Gender selection ---------------- */
+  .gender-select{
+    display:flex; gap:14px; justify-content:center; margin-bottom:14px;
+  }
+  .gender-card{
+    flex:1;
+    max-width:150px;
+    background: #F1F0FB;
+    border: 3px solid transparent;
+    border-radius:18px;
+    padding:10px 8px 12px;
+    cursor:pointer;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    color: var(--ink);
+    display:flex; flex-direction:column; align-items:center; gap:4px;
+  }
+  .gender-card canvas{ display:block; }
+  .gender-card.selected{
+    border-color: var(--success);
+    background: #E4FBF3;
+    box-shadow: 0 4px 0 rgba(6,214,160,0.35);
+  }
+  .gender-card span.check{
+    font-size:12px; color: var(--success); font-weight:800; height:14px;
+  }
+  .gender-card:not(.selected) span.check{ visibility:hidden; }
+
+  /* ---------------- Question modal ---------------- */
   #questionOverlay .panel{ max-width:460px; }
   .question-board{
     background: var(--ink);
     color:white;
     border-radius:18px;
-    padding:22px 18px;
+    padding:20px 16px;
     font-family:'Baloo 2', sans-serif;
-    font-size:34px;
+    font-size:32px;
     font-weight:700;
-    margin-bottom:18px;
+    margin-bottom:16px;
     border: 6px solid #5b5470;
     letter-spacing:1px;
   }
@@ -156,13 +244,13 @@
   }
   .answer-btn{
     font-family:'Baloo 2', sans-serif;
-    font-size:24px;
+    font-size:23px;
     font-weight:800;
     color:var(--ink);
     background: white;
     border: 3px solid rgba(43,39,64,0.12);
     border-radius:16px;
-    padding:16px 8px;
+    padding:15px 8px;
     cursor:pointer;
     box-shadow: 0 4px 0 rgba(43,39,64,0.12);
   }
@@ -170,15 +258,56 @@
   .answer-btn.correct{ background: var(--success); color:white; border-color:var(--success); }
   .answer-btn.wrong{ background: var(--danger); color:white; border-color:var(--danger); }
   .feedback{
-    min-height:24px;
+    min-height:22px;
     font-family:'Baloo 2', sans-serif;
     font-weight:700;
-    font-size:16px;
-    margin-top:12px;
+    font-size:15px;
+    margin-top:10px;
     color:var(--ink);
   }
 
-  /* mobile controls */
+  /* ---------------- Leaderboard ---------------- */
+  .leaderboard-list{
+    display:flex; flex-direction:column; gap:6px;
+    margin-bottom:14px;
+    text-align:left;
+  }
+  .leaderboard-row{
+    display:grid;
+    grid-template-columns: 32px 1fr 56px 46px;
+    align-items:center;
+    gap:6px;
+    background:#F1F0FB;
+    border-radius:12px;
+    padding:8px 10px;
+    font-family:'Baloo 2', sans-serif;
+    font-weight:700;
+    color:var(--ink);
+    font-size:14px;
+  }
+  .leaderboard-row.top1{ background: linear-gradient(90deg,#FFF3D0,#FFE08A); }
+  .leaderboard-row.top2{ background: #EAEAF2; }
+  .leaderboard-row.top3{ background: #F5E2CE; }
+  .lb-rank{ text-align:center; }
+  .lb-name{ overflow:hidden; text-overflow:ellipsis; white-space:nowrap; }
+  .lb-score{ text-align:right; color:var(--building); }
+  .lb-level{ text-align:right; font-size:11px; opacity:0.7; }
+
+  .name-input{
+    width:100%;
+    font-family:'Nunito',sans-serif;
+    font-weight:700;
+    font-size:15px;
+    padding:12px 14px;
+    border-radius:14px;
+    border: 2px solid rgba(43,39,64,0.15);
+    margin-bottom:10px;
+    color: var(--ink);
+    background:#F8F8FD;
+  }
+  .name-input:focus{ outline:none; border-color: var(--success); }
+
+  /* ---------------- Mobile controls ---------------- */
   #mobileControls{
     position:fixed; bottom:18px; left:0; right:0;
     display:flex; justify-content:space-between; padding:0 20px;
@@ -186,12 +315,12 @@
   }
   .lane-btn{
     pointer-events:all;
-    width:70px; height:70px;
+    width:68px; height:68px;
     border-radius:50%;
     background: rgba(255,253,247,0.85);
     border: none;
     box-shadow: var(--shadow);
-    font-size:30px;
+    font-size:28px;
     display:flex; align-items:center; justify-content:center;
     color:var(--ink);
   }
@@ -206,8 +335,10 @@
 
 <canvas id="gameCanvas"></canvas>
 
+<!-- HUD -->
 <div class="hud">
   <div class="hud-card">
+    <div class="hud-avatar-wrap"><canvas id="hudAvatar" width="40" height="48"></canvas></div>
     <span class="hearts" id="heartsDisplay">❤️❤️❤️</span>
   </div>
   <div class="hud-card">
@@ -215,7 +346,11 @@
     <span class="score-value" id="scoreDisplay">0</span>
   </div>
 </div>
-<div class="level-badge" id="levelBadge">Level 1</div>
+<div class="level-wrap">
+  <div class="level-badge" id="levelBadge">Level 1</div>
+  <div class="progress-track"><div class="progress-fill" id="levelProgressFill"></div></div>
+</div>
+<div class="combo-badge hidden" id="comboBadge">🔥 Combo x0</div>
 
 <div id="mobileControls">
   <button class="lane-btn" id="btnLeft">⬅️</button>
@@ -225,11 +360,39 @@
 <!-- START SCREEN -->
 <div class="overlay" id="startOverlay">
   <div class="panel">
-    <div class="emoji-row">🏙️🏃‍♀️🔢</div>
+    <div class="emoji-row">🏙️🔢</div>
     <h1>Petualangan Kota Angka</h1>
     <p>Berlarilah menyusuri kota dan hindari rintangan! Saat kamu bertemu <b>Gerbang Angka</b>, jawab soal matematikanya untuk menghancurkannya dan terus melaju.</p>
-    <p style="font-size:13px; opacity:0.7;">🖥️ Gunakan tombol <b>⬅️ ➡️</b> atau <b>A / D</b><br>📱 Atau ketuk tombol panah di layar</p>
-    <button class="btn" id="startBtn">▶️ Mulai Main</button>
+
+    <p style="font-weight:800; font-family:'Baloo 2',sans-serif; margin-bottom:8px; color:var(--ink); opacity:1;">Pilih karaktermu</p>
+    <div class="gender-select">
+      <button class="gender-card selected" id="genderBoyCard" data-gender="boy">
+        <canvas id="genderPreviewBoy" width="80" height="96"></canvas>
+        <span>Laki-laki</span>
+        <span class="check">✓ Terpilih</span>
+      </button>
+      <button class="gender-card" id="genderGirlCard" data-gender="girl">
+        <canvas id="genderPreviewGirl" width="80" height="96"></canvas>
+        <span>Perempuan</span>
+        <span class="check">✓ Terpilih</span>
+      </button>
+    </div>
+
+    <p style="font-size:12.5px; opacity:0.7;">🖥️ Gunakan tombol <b>⬅️ ➡️</b> atau <b>A / D</b> · 📱 Ketuk tombol panah atau geser layar</p>
+    <div class="btn-row">
+      <button class="btn" id="startBtn">▶️ Mulai Main</button>
+    </div>
+    <button class="btn gold" id="leaderboardBtn">🏆 Papan Peringkat</button>
+  </div>
+</div>
+
+<!-- LEADERBOARD SCREEN -->
+<div class="overlay hidden" id="leaderboardOverlay">
+  <div class="panel">
+    <div class="emoji-row">🏆</div>
+    <h2>Papan Peringkat</h2>
+    <div class="leaderboard-list" id="leaderboardList"></div>
+    <button class="btn secondary" id="closeLeaderboardBtn">⬅️ Kembali</button>
   </div>
 </div>
 
@@ -246,13 +409,20 @@
 <!-- GAME OVER SCREEN -->
 <div class="overlay hidden" id="gameOverOverlay">
   <div class="panel">
-    <div class="emoji-row">🏆</div>
+    <div class="emoji-row" id="gameOverEmoji">🏁</div>
     <h1>Permainan Selesai</h1>
     <div class="stat-row">
       <div class="stat"><div class="num" id="finalScore">0</div><div class="lab">SKOR</div></div>
       <div class="stat"><div class="num" id="finalLevel">1</div><div class="lab">LEVEL</div></div>
       <div class="stat"><div class="num" id="finalCorrect">0</div><div class="lab">BENAR</div></div>
     </div>
+
+    <div id="saveScoreArea">
+      <input type="text" id="playerNameInput" class="name-input" maxlength="14" placeholder="Tulis namamu di sini...">
+      <button class="btn gold" id="saveScoreBtn">💾 Simpan ke Papan Peringkat</button>
+    </div>
+    <div class="leaderboard-list hidden" id="gameOverLeaderboard"></div>
+
     <button class="btn secondary" id="restartBtn">🔄 Main Lagi</button>
   </div>
 </div>
